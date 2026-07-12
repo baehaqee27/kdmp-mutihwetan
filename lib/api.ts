@@ -1,4 +1,5 @@
 import { supabase, BUCKET_PRODUCTS, BUCKET_PROOFS, BUCKET_SETTINGS } from "./supabase";
+import { uploadToCloudinary } from "./cloudinary";
 import type { Category, Product, Order, OrderItem, Settings } from "./types";
 
 export async function getCategories(): Promise<Category[]> {
@@ -225,13 +226,8 @@ export async function adminDeleteProduct(id: string) {
 }
 
 export async function adminUploadProductImage(file: File): Promise<string> {
-  const ext = file.name.split(".").pop();
-  const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-  const { error } = await supabase.storage
-    .from(BUCKET_PRODUCTS)
-    .upload(path, file, { upsert: false });
-  if (error) throw error;
-  return supabase.storage.from(BUCKET_PRODUCTS).getPublicUrl(path).data.publicUrl;
+  const result = await uploadToCloudinary(file, "kdkmp-mutihwetan/products");
+  return result.secure_url;
 }
 
 export async function adminUploadSettingImage(file: File, prefix: string): Promise<string> {

@@ -6,7 +6,6 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   Menu,
   ShoppingCart,
-  Search,
   X,
   User,
   LogOut,
@@ -18,6 +17,7 @@ import { useAuth, signOut } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { Logo } from "./logo";
 import { STORE } from "@/lib/constants";
+import { SearchDropdown } from "./search-dropdown";
 
 export function Header() {
   const { count } = useCart();
@@ -26,14 +26,6 @@ export function Header() {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const [menu, setMenu] = React.useState(false);
-  const [search, setSearch] = React.useState("");
-
-  const submitSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const q = search.trim();
-    router.push(q ? `/produk?search=${encodeURIComponent(q)}` : "/produk");
-    setOpen(false);
-  };
 
   const links = [
     { href: "/", label: "Beranda" },
@@ -77,15 +69,7 @@ export function Header() {
         </nav>
 
         <div className="hidden flex-1 justify-center px-4 md:flex">
-          <form onSubmit={submitSearch} className="relative w-full max-w-xs">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Cari produk..."
-              className="h-9 w-full rounded-full border border-input bg-background pl-9 pr-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            />
-          </form>
+          <SearchDropdown className="w-full max-w-xs" />
         </div>
 
         <div className="flex items-center gap-1">
@@ -161,15 +145,11 @@ export function Header() {
       {open && (
         <div className="border-t bg-background md:hidden">
           <div className="container-page flex flex-col gap-1 py-3">
-            <form onSubmit={submitSearch} className="relative mb-2">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Cari produk..."
-                className="h-10 w-full rounded-md border border-input bg-background pl-9 pr-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              />
-            </form>
+            <SearchDropdown
+              mobile
+              className="mb-2"
+              onResultClick={() => setOpen(false)}
+            />
             {links.map((l) => (
               <Link
                 key={l.href}

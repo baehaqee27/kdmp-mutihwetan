@@ -55,6 +55,7 @@ export function ProductDialog({
   const [active, setActive] = React.useState(true);
   const [imageUrl, setImageUrl] = React.useState<string | null>(null);
   const [file, setFile] = React.useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
   const [saving, setSaving] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -70,9 +71,17 @@ export function ProductDialog({
       setActive(product?.active ?? true);
       setImageUrl(product?.image_url ?? null);
       setFile(null);
+      setPreviewUrl(null);
       setError(null);
     }
   }, [open, product]);
+
+  // cleanup object URL on unmount
+  React.useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
 
   const onNameChange = (v: string) => {
     setName(v);
@@ -195,8 +204,8 @@ export function ProductDialog({
             <Label>Gambar Produk</Label>
             <div className="flex items-center gap-4">
               <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg border bg-muted">
-                {imageUrl ? (
-                  <Image src={imageUrl} alt="" fill sizes="80px" className="object-cover" />
+                {previewUrl || imageUrl ? (
+                  <Image src={previewUrl || imageUrl!} alt="" fill sizes="80px" className="object-cover" />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center text-muted-foreground">
                     <Upload className="h-5 w-5" />
@@ -209,7 +218,12 @@ export function ProductDialog({
                   type="file"
                   accept="image/*"
                   className="hidden"
-                  onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+                  onChange={(e) => {
+                    const f = e.target.files?.[0] ?? null;
+                    setFile(f);
+                    if (previewUrl) URL.revokeObjectURL(previewUrl);
+                    setPreviewUrl(f ? URL.createObjectURL(f) : null);
+                  }}
                 />
               </label>
               {imageUrl && (
@@ -218,6 +232,8 @@ export function ProductDialog({
                   onClick={() => {
                     setImageUrl(null);
                     setFile(null);
+                    if (previewUrl) URL.revokeObjectURL(previewUrl);
+                    setPreviewUrl(null);
                   }}
                   className="text-muted-foreground hover:text-destructive"
                   aria-label="Hapus gambar"
