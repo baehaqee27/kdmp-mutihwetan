@@ -13,38 +13,40 @@ import {
   Package,
 } from "lucide-react";
 import { STORE, PAYMENT_METHODS } from "@/lib/constants";
-import { getCategories, getProducts } from "@/lib/api";
+import { getProducts } from "@/lib/api";
 import { waLink } from "@/lib/wa";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/store/product-card";
 import { WaveDivider } from "@/components/store/wave-divider";
+import { CategoryGrid } from "@/components/store/category-grid";
+import { FlashSale } from "@/components/store/flash-sale";
+import { HorizontalProducts } from "@/components/store/horizontal-products";
 import { KeunggulanSection } from "@/components/store/keunggulan";
 import { StatsSection } from "@/components/store/stats";
 import { TestimoniSection } from "@/components/store/testimoni";
 import { TentangSection } from "@/components/store/tentang-section";
 import { CTASection } from "@/components/store/cta-section";
 import { PromoBanner } from "@/components/store/promo-banner";
-import type { Category, Product } from "@/lib/types";
+import type { Product } from "@/lib/types";
 
 export default function HomePage() {
-  const [categories, setCategories] = React.useState<Category[]>([]);
   const [products, setProducts] = React.useState<Product[]>([]);
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    Promise.all([getCategories(), getProducts()])
-      .then(([c, p]) => {
-        setCategories(c);
-        setProducts(p.slice(0, 8));
-      })
+    getProducts()
+      .then((p) => setProducts(p))
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
 
+  const latest = products.slice(0, 8);
+  const flashSale = products.slice(0, 4);
+
   return (
     <div>
       {/* Hero */}
-      <section className="relative flex min-h-[70vh] items-center overflow-hidden bg-primary text-primary-foreground lg:min-h-[100vh]">
+      <section className="relative flex min-h-[70vh] items-center overflow-hidden bg-primary text-primary-foreground lg:min-h-[85vh]">
         <Image
           src="/hero.png"
           alt="Koperasi Desa Merah Putih"
@@ -53,11 +55,12 @@ export default function HomePage() {
           sizes="100vw"
           className="object-cover object-center"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent" />
         <div className="container-page relative grid items-center gap-8 py-16 md:grid-cols-2">
           <div className="flex flex-col justify-center gap-5 animate-fade-in">
             <span className="inline-flex w-fit items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-medium backdrop-blur">
-              <Leaf className="h-3.5 w-3.5" /> Produk Lokal Desa {STORE.village}
+              <Leaf className="h-3.5 w-3.5" /> Produk Lokal Desa{" "}
+              {STORE.village}
             </span>
             <h1 className="text-3xl font-bold leading-tight md:text-5xl">
               {STORE.tagline}
@@ -82,7 +85,7 @@ export default function HomePage() {
                 <a
                   href={waLink(
                     STORE.waAdmin,
-                    `Halo ${STORE.name}, saya mau tanya produk.`,
+                    `Halo ${STORE.name}, saya mau tanya produk.`
                   )}
                   target="_blank"
                   rel="noreferrer"
@@ -114,41 +117,58 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Promo Banner */}
-      <PromoBanner />
-
       {/* Wave: hero -> white */}
       <WaveDivider />
 
-      {/* Categories */}
-      <section className="container-page py-10">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-bold">Kategori</h2>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <Link
-            href="/produk"
-            className="rounded-full border px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
-          >
-            Semua
-          </Link>
-          {categories.map((c) => (
-            <Link
-              key={c.id}
-              href={`/produk?cat=${c.slug}`}
-              className="rounded-full border px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
-            >
-              {c.name}
-            </Link>
-          ))}
-        </div>
-      </section>
+      {/* Promo Banner */}
+      <PromoBanner />
 
-      {/* Featured products */}
-      <section className="container-page py-6">
+      {/* Category Grid (Alfagift style) */}
+      <CategoryGrid />
+
+      {/* Flash Sale */}
+      {loading ? (
+        <section className="container-page py-6">
+          <div className="mb-4 h-5 w-32 animate-pulse rounded bg-muted" />
+          <div className="flex gap-3 overflow-hidden">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-56 w-[140px] shrink-0 animate-pulse rounded-xl bg-muted sm:flex-1"
+              />
+            ))}
+          </div>
+        </section>
+      ) : (
+        <FlashSale products={flashSale} />
+      )}
+
+      {/* Produk Terbaru (horizontal scroll) */}
+      {loading ? (
+        <section className="container-page py-6">
+          <div className="mb-4 h-5 w-32 animate-pulse rounded bg-muted" />
+          <div className="flex gap-3 overflow-hidden">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-56 w-[140px] shrink-0 animate-pulse rounded-xl bg-muted sm:flex-1"
+              />
+            ))}
+          </div>
+        </section>
+      ) : (
+        <HorizontalProducts
+          title="Produk Terbaru"
+          subtitle="Baru saja ditambahkan"
+          products={latest}
+        />
+      )}
+
+      {/* Semua Produk (grid) */}
+      <section className="container-page py-8">
         <div className="mb-5 flex items-end justify-between">
           <div>
-            <h2 className="text-lg font-bold">Produk Unggulan</h2>
+            <h2 className="text-lg font-bold">Semua Produk</h2>
             <p className="text-sm text-muted-foreground">
               Pilihan terbaik dari koperasi desa
             </p>
@@ -176,7 +196,7 @@ export default function HomePage() {
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {products.map((p) => (
+            {products.slice(0, 8).map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
           </div>
