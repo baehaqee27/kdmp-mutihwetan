@@ -46,7 +46,7 @@ export default function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <section className="relative flex min-h-[70vh] items-center overflow-hidden bg-primary text-primary-foreground lg:min-h-[85vh]">
+      <section className="relative flex min-h-[70vh] items-center overflow-hidden bg-primary text-primary-foreground lg:min-h-[100vh]">
         <Image
           src="/hero.png"
           alt="Koperasi Desa Merah Putih"
@@ -59,8 +59,7 @@ export default function HomePage() {
         <div className="container-page relative grid items-center gap-8 py-16 md:grid-cols-2">
           <div className="flex flex-col justify-center gap-5 animate-fade-in">
             <span className="inline-flex w-fit items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-medium backdrop-blur">
-              <Leaf className="h-3.5 w-3.5" /> Produk Lokal Desa{" "}
-              {STORE.village}
+              <Leaf className="h-3.5 w-3.5" /> Produk Lokal Desa {STORE.village}
             </span>
             <h1 className="text-3xl font-bold leading-tight md:text-5xl">
               {STORE.tagline}
@@ -85,7 +84,7 @@ export default function HomePage() {
                 <a
                   href={waLink(
                     STORE.waAdmin,
-                    `Halo ${STORE.name}, saya mau tanya produk.`
+                    `Halo ${STORE.name}, saya mau tanya produk.`,
                   )}
                   target="_blank"
                   rel="noreferrer"
@@ -117,11 +116,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Wave: hero -> white */}
-      <WaveDivider />
-
       {/* Promo Banner */}
       <PromoBanner />
+
+      {/* Wave: hero -> white */}
+      <WaveDivider />
 
       {/* Category Grid (Alfagift style) */}
       <CategoryGrid />
