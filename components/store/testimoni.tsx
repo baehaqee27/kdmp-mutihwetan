@@ -15,13 +15,13 @@ const testimonials = [
   },
   {
     name: "Ibu Ratna",
-    village: "Kalongan",
+    village: "Jungpasir",
     text: "Sabun berasnya bagus, kulit jadi lembut. Senang bisa beli produk desa tanpa harus ke kota. Terima kasih KDKMP!",
     rating: 5,
   },
   {
     name: "Pak Budi",
-    village: "Sambong",
+    village: "Tedunan",
     text: "COD-nya mantap, bayar di tempat pas barang datang. Praktis banget. Recommended untuk yang belum percaya belanja online.",
     rating: 5,
   },

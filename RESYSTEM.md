@@ -7,7 +7,7 @@
 
 ## Ringkasan
 
-Toko online untuk **Koperasi Desa Merah Putih (KDKMP)** di Desa Mutih Wetan, Grobogan, Jawa Tengah. Gratis ongkir untuk desa tertentu, pembayaran via transfer/QRIS/COD, konfirmasi pesanan via WhatsApp.
+Toko online untuk **Koperasi Desa Merah Putih (KDKMP)** di Desa Mutih Wetan, Kec. Wedung, Kab. Demak, Jawa Tengah. Gratis ongkir untuk desa tertentu, pembayaran via transfer/QRIS/COD, konfirmasi pesanan via WhatsApp.
 
 ---
 
@@ -262,8 +262,8 @@ ORDER_STATUS = [
 ];
 
 DESA_OPTIONS = [
-  "Mutih Wetan", "Mutih Kulon", "Kalongan",
-  "Sambong", "Tlogojati", "Lainnya"
+  "Mutih Wetan", "Mutih Kulon", "Jungpasir",
+  "Bungo", "Jetak", "Kendalasem", "Tedunan", "Lainnya"
 ];
 ```
 

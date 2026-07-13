@@ -32,7 +32,7 @@ const contactInfo = [
   {
     icon: MapPin,
     label: "Alamat",
-    value: `Desa ${STORE.village}, Kabupaten Grobogan, Jawa Tengah`,
+    value: `Desa ${STORE.village}, Kec. Wedung, Kabupaten Demak, Jawa Tengah`,
     href: null,
   },
   {

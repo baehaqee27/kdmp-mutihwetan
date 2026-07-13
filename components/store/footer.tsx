@@ -93,7 +93,7 @@ export function Footer() {
             </li>
             <li className="flex items-start gap-2">
               <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-              <span>Desa {STORE.village}, Grobogan, Jawa Tengah</span>
+              <span>Desa {STORE.village}, Kec. Wedung, Kab. Demak, Jawa Tengah</span>
             </li>
           </ul>
         </div>

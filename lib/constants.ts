@@ -43,8 +43,10 @@ export const ORDER_STATUS = [
 export const DESA_OPTIONS = [
   "Mutih Wetan",
   "Mutih Kulon",
-  "Kalongan",
-  "Sambong",
-  "Tlogojati",
+  "Jungpasir",
+  "Bungo",
+  "Jetak",
+  "Kendalasem",
+  "Tedunan",
   "Lainnya",
 ];

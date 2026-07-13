@@ -62,7 +62,7 @@ const faqCategories = [
     items: [
       {
         q: "Berapa lama waktu pengiriman?",
-        a: "Untuk Desa Mutih Wetan: 1-2 hari. Desa sekitar (Kalongan, Sambong, dll): 2-3 hari. COD bisa lebih cepat karena langsung diantar.",
+        a: "Untuk Desa Mutih Wetan: 1-2 hari. Desa sekitar (Mutih Kulon, Jungpasir, Bungo, Jetak, dll): 2-3 hari. COD bisa lebih cepat karena langsung diantar.",
       },
       {
         q: "Apakah ada biaya pengiriman?",
