@@ -131,7 +131,7 @@ function ProductsContent() {
       )}
 
       {loading ? (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 items-stretch gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {Array.from({ length: 8 }).map((_, i) => (
             <div key={i} className="h-64 animate-pulse rounded-xl bg-muted" />
           ))}
@@ -142,7 +142,7 @@ function ProductsContent() {
           <p className="text-sm">Tidak ada produk yang cocok.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 items-stretch gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {sorted.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}
