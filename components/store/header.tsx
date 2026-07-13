@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Logo } from "./logo";
 import { STORE } from "@/lib/constants";
 import { SearchDropdown } from "./search-dropdown";
+import { ThemeToggle } from "./theme-toggle";
 
 export function Header() {
   const { count } = useCart();
@@ -73,6 +74,7 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-1">
+          <ThemeToggle />
           <Link
             href="/keranjang"
             aria-label="Keranjang"
@@ -150,6 +152,10 @@ export function Header() {
               className="mb-2"
               onResultClick={() => setOpen(false)}
             />
+            <div className="flex items-center justify-between rounded-md px-3 py-2.5">
+              <span className="text-sm font-medium">Mode Gelap</span>
+              <ThemeToggle />
+            </div>
             {links.map((l) => (
               <Link
                 key={l.href}

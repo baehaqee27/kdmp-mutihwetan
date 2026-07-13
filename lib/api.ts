@@ -1,6 +1,6 @@
 import { supabase, BUCKET_PRODUCTS, BUCKET_PROOFS, BUCKET_SETTINGS } from "./supabase";
 import { uploadToCloudinary } from "./cloudinary";
-import type { Category, Product, Order, OrderItem, Settings } from "./types";
+import type { Category, Product, Order, OrderItem, Settings, Review } from "./types";
 
 export async function getCategories(): Promise<Category[]> {
   const { data, error } = await supabase
@@ -243,4 +243,38 @@ export async function adminUploadSettingImage(file: File, prefix: string): Promi
 export async function adminUpdateSettings(s: Partial<Settings>) {
   const { error } = await supabase.from("settings").update(s).eq("id", 1);
   if (error) throw error;
+}
+
+/* ----------------- REVIEWS ----------------- */
+
+export async function getReviewsByProduct(productId: string): Promise<Review[]> {
+  const { data, error } = await supabase
+    .from("reviews")
+    .select("*")
+    .eq("product_id", productId)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return data ?? [];
+}
+
+export async function createReview(input: {
+  product_id: string;
+  user_id?: string | null;
+  user_name: string;
+  rating: number;
+  comment?: string;
+}): Promise<Review> {
+  const { data, error } = await supabase
+    .from("reviews")
+    .insert({
+      product_id: input.product_id,
+      user_id: input.user_id ?? null,
+      user_name: input.user_name,
+      rating: input.rating,
+      comment: input.comment ?? null,
+    })
+    .select()
+    .single();
+  if (error) throw error;
+  return data as Review;
 }

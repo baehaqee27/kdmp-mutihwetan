@@ -78,6 +78,19 @@ create table if not exists public.order_items (
 
 create index if not exists order_items_order_idx on public.order_items(order_id);
 
+-- ---------- REVIEWS ----------
+create table if not exists public.reviews (
+  id uuid primary key default gen_random_uuid(),
+  product_id uuid not null references public.products(id) on delete cascade,
+  user_id uuid references auth.users(id) on delete set null,
+  user_name text not null,
+  rating integer not null check (rating >= 1 and rating <= 5),
+  comment text,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists reviews_product_idx on public.reviews(product_id);
+
 -- =====================================================================
 -- ROW LEVEL SECURITY
 -- =====================================================================
@@ -86,6 +99,7 @@ alter table public.products enable row level security;
 alter table public.settings enable row level security;
 alter table public.orders enable row level security;
 alter table public.order_items enable row level security;
+alter table public.reviews enable row level security;
 
 -- Categories: public read
 create policy "categories_read" on public.categories for select using (true);
@@ -108,6 +122,11 @@ create policy "orders_write" on public.orders for all to authenticated using (tr
 create policy "order_items_insert" on public.order_items for insert to authenticated with check (true);
 create policy "order_items_read" on public.order_items for select using (true);
 create policy "order_items_write" on public.order_items for all to authenticated using (true) with check (true);
+
+-- Reviews: public read, authenticated insert, own reviews delete
+create policy "reviews_read" on public.reviews for select using (true);
+create policy "reviews_insert" on public.reviews for insert to authenticated with check (true);
+create policy "reviews_delete" on public.reviews for delete to authenticated using (user_id = auth.uid());
 
 -- =====================================================================
 -- STORAGE BUCKETS + POLICIES

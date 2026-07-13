@@ -51,3 +51,13 @@ export type Settings = {
   free_desa: string;
   store_name: string;
 };
+
+export type Review = {
+  id: string;
+  product_id: string;
+  user_id: string | null;
+  user_name: string;
+  rating: number;
+  comment: string | null;
+  created_at: string;
+};

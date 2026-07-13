@@ -95,9 +95,7 @@ export default function PesananSayaPage() {
                 </span>
                 <div className="flex gap-2">
                   <Button asChild variant="outline" size="sm">
-                    <Link
-                      href={`/pesanan?order=${o.order_number}&phone=${o.phone}`}
-                    >
+                    <Link href={`/akun/pesanan/${o.id}`}>
                       Detail
                     </Link>
                   </Button>

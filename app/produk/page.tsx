@@ -3,10 +3,34 @@
 import * as React from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Search, Package } from "lucide-react";
+import { Search, Package, ArrowUpDown } from "lucide-react";
 import { getCategories, getProducts } from "@/lib/api";
 import { ProductCard } from "@/components/store/product-card";
 import type { Category, Product } from "@/lib/types";
+
+type SortKey = "newest" | "price-asc" | "price-desc" | "name-asc";
+
+const SORT_OPTIONS: { value: SortKey; label: string }[] = [
+  { value: "newest", label: "Terbaru" },
+  { value: "price-asc", label: "Harga Terendah" },
+  { value: "price-desc", label: "Harga Tertinggi" },
+  { value: "name-asc", label: "Nama A-Z" },
+];
+
+function sortProducts(products: Product[], sort: SortKey): Product[] {
+  const sorted = [...products];
+  switch (sort) {
+    case "price-asc":
+      return sorted.sort((a, b) => a.price - b.price);
+    case "price-desc":
+      return sorted.sort((a, b) => b.price - a.price);
+    case "name-asc":
+      return sorted.sort((a, b) => a.name.localeCompare(b.name, "id"));
+    case "newest":
+    default:
+      return sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  }
+}
 
 function ProductsContent() {
   const searchParams = useSearchParams();
@@ -17,6 +41,7 @@ function ProductsContent() {
   const [products, setProducts] = React.useState<Product[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [search, setSearch] = React.useState(searchParam);
+  const [sort, setSort] = React.useState<SortKey>("newest");
 
   React.useEffect(() => {
     setSearch(searchParam);
@@ -32,6 +57,8 @@ function ProductsContent() {
       .catch(() => {})
       .finally(() => setLoading(false));
   }, [cat, search]);
+
+  const sorted = sortProducts(products, sort);
 
   return (
     <div className="container-page py-8">
@@ -69,16 +96,39 @@ function ProductsContent() {
           ))}
         </div>
 
-        <div className="relative w-full lg:max-w-xs">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Cari produk..."
-            className="h-10 w-full rounded-full border border-input bg-background pl-9 pr-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          />
+        <div className="flex items-center gap-3">
+          <div className="relative w-full lg:max-w-xs">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Cari produk..."
+              className="h-10 w-full rounded-full border border-input bg-background pl-9 pr-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            />
+          </div>
+
+          <div className="relative shrink-0">
+            <ArrowUpDown className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <select
+              value={sort}
+              onChange={(e) => setSort(e.target.value as SortKey)}
+              className="h-10 appearance-none rounded-full border border-input bg-background pl-9 pr-8 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              {SORT_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
+
+      {!loading && (
+        <p className="mb-4 text-sm text-muted-foreground">
+          {sorted.length} produk{search && ` untuk "${search}"`}
+        </p>
+      )}
 
       {loading ? (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
@@ -86,14 +136,14 @@ function ProductsContent() {
             <div key={i} className="h-64 animate-pulse rounded-xl bg-muted" />
           ))}
         </div>
-      ) : products.length === 0 ? (
+      ) : sorted.length === 0 ? (
         <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed py-16 text-muted-foreground">
           <Package className="h-8 w-8" />
           <p className="text-sm">Tidak ada produk yang cocok.</p>
         </div>
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {products.map((p) => (
+          {sorted.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}
         </div>

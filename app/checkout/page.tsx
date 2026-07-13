@@ -84,6 +84,29 @@ export default function CheckoutPage() {
   const ongkir = 0;
   const grandTotal = total + ongkir;
 
+  const [formErrors, setFormErrors] = React.useState<Record<string, string>>({});
+
+  const validateField = (field: string, value: string) => {
+    const errors = { ...formErrors };
+    switch (field) {
+      case "name":
+        if (value.trim() && value.trim().length < 2) errors.name = "Minimal 2 karakter";
+        else delete errors.name;
+        break;
+      case "phone": {
+        const clean = value.replace(/[\s\-()]/g, "");
+        if (clean && !/^(08|\+62|62)\d{8,13}$/.test(clean)) errors.phone = "Contoh: 081234567890";
+        else delete errors.phone;
+        break;
+      }
+      case "address":
+        if (value.trim() && value.trim().length < 10) errors.address = "Minimal 10 karakter, sertakan RT/RW";
+        else delete errors.address;
+        break;
+    }
+    setFormErrors(errors);
+  };
+
   const needProof = form.payment === "transfer" || form.payment === "qris";
 
   if (count === 0 && !created) {
@@ -134,12 +157,32 @@ export default function CheckoutPage() {
     e.preventDefault();
     setError(null);
 
-    if (!form.name.trim() || !form.phone.trim() || !form.address.trim()) {
-      setError("Nama, nomor WhatsApp, dan alamat wajib diisi.");
+    if (!form.name.trim() || form.name.trim().length < 2) {
+      setError("Nama lengkap wajib diisi (minimal 2 karakter).");
       return;
     }
+
+    const phoneClean = form.phone.replace(/[\s\-()]/g, "");
+    if (!phoneClean) {
+      setError("Nomor WhatsApp wajib diisi.");
+      return;
+    }
+    if (!/^(08|\+62|62)\d{8,13}$/.test(phoneClean)) {
+      setError("Format nomor WhatsApp tidak valid. Contoh: 081234567890");
+      return;
+    }
+
+    if (!form.address.trim() || form.address.trim().length < 10) {
+      setError("Alamat lengkap wajib diisi (minimal 10 karakter, sertakan RT/RW).");
+      return;
+    }
+
     if (needProof && !proof) {
       setError("Silakan unggah bukti pembayaran.");
+      return;
+    }
+    if (proof && proof.size > 5 * 1024 * 1024) {
+      setError("Ukuran bukti pembayaran maksimal 5 MB.");
       return;
     }
 
@@ -213,8 +256,11 @@ export default function CheckoutPage() {
                   id="name"
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  onBlur={(e) => validateField("name", e.target.value)}
                   placeholder="Budi Santoso"
+                  className={formErrors.name ? "border-destructive" : ""}
                 />
+                {formErrors.name && <p className="text-xs text-destructive">{formErrors.name}</p>}
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="phone">Nomor WhatsApp</Label>
@@ -222,8 +268,11 @@ export default function CheckoutPage() {
                   id="phone"
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                  onBlur={(e) => validateField("phone", e.target.value)}
                   placeholder="08xxxxxxxxxx"
+                  className={formErrors.phone ? "border-destructive" : ""}
                 />
+                {formErrors.phone && <p className="text-xs text-destructive">{formErrors.phone}</p>}
               </div>
             </div>
             <div className="mt-4 space-y-1.5">
@@ -232,8 +281,11 @@ export default function CheckoutPage() {
                 id="address"
                 value={form.address}
                 onChange={(e) => setForm({ ...form, address: e.target.value })}
+                onBlur={(e) => validateField("address", e.target.value)}
                 placeholder="RT/RW, dusun, patokan"
+                className={formErrors.address ? "border-destructive" : ""}
               />
+              {formErrors.address && <p className="text-xs text-destructive">{formErrors.address}</p>}
             </div>
             <div className="mt-4 space-y-1.5">
               <Label>Desa / Wilayah</Label>

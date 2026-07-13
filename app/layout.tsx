@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/components/store/cart-context";
+import { ThemeProvider } from "@/components/store/theme-provider";
 import { Header } from "@/components/store/header";
 import { Footer } from "@/components/store/footer";
 import { WhatsAppFloat } from "@/components/store/wa-float";
@@ -61,6 +62,13 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  manifest: "/manifest.json",
+  other: {
+    "theme-color": "#e63b2e",
+  },
+  icons: {
+    icon: "/logo.webp",
+  },
 };
 
 export default function RootLayout({
@@ -71,15 +79,17 @@ export default function RootLayout({
   return (
     <html lang="id" className={jakarta.variable}>
       <body className="flex min-h-screen flex-col font-sans">
-        <CartProvider>
-          <DevBanner />
-          <Header />
-          <main className="flex-1 pb-14 md:pb-0">{children}</main>
-          <Footer />
-          <WhatsAppFloat />
-          <BackToTop />
-          <BottomNav />
-        </CartProvider>
+        <ThemeProvider>
+          <CartProvider>
+            <DevBanner />
+            <Header />
+            <main className="flex-1 pb-14 md:pb-0">{children}</main>
+            <Footer />
+            <WhatsAppFloat />
+            <BackToTop />
+            <BottomNav />
+          </CartProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
