@@ -48,7 +48,7 @@ export function TentangSection() {
                   <Handshake className="h-10 w-10 text-primary" />
                 </div>
                 <div>
-                  <p className="text-3xl font-bold text-primary">Sejak 2024</p>
+                  <p className="text-3xl font-bold text-primary">Sejak 2026</p>
                   <p className="mt-1 text-sm text-muted-foreground">
                     Melayani warga desa dengan sepenuh hati
                   </p>

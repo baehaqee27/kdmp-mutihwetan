@@ -37,22 +37,22 @@ const values = [
 
 const timeline = [
   {
-    year: "2024",
+    year: "2026",
     title: "Pendirian Koperasi",
     desc: "Koperasi Desa Merah Putih resmi didirikan oleh tokoh masyarakat Desa Mutih Wetan.",
   },
   {
-    year: "2024",
+    year: "2026",
     title: "Peluncuran Toko Online",
     desc: "Platform online diluncurkan untuk mempermudah warga berbelanja produk lokal.",
   },
   {
-    year: "2025",
+    year: "2026",
     title: "Ekspansi ke 6 Desa",
     desc: "Cakupan layanan kami meluas hingga melayani 6 desa di sekitar wilayah.",
   },
   {
-    year: "2025",
+    year: "2026",
     title: "500+ Produk Terjual",
     desc: "Kami telah berhasil menjual lebih dari 500 produk kepada warga desa.",
   },

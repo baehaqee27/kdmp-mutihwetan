@@ -212,6 +212,22 @@ export default function KontakPage() {
         </div>
       </section>
 
+      {/* Map */}
+      <section className="container-page pb-16">
+        <h2 className="mb-4 text-xl font-bold">Lokasi Kami</h2>
+        <div className="overflow-hidden rounded-2xl border">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d1012.5696895461786!2d110.6626152877188!3d-6.745226114733972!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sid!2sid!4v1783939207221!5m2!1sid!2sid"
+            width="100%"
+            height="450"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="strict-origin-when-cross-origin"
+          />
+        </div>
+      </section>
+
       {/* Wave: white -> red */}
       <WaveDivider flip />
 
